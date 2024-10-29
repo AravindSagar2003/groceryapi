@@ -185,21 +185,47 @@ class updateProduct(GenericAPIView):
 
 
 class addCategory(GenericAPIView):
+    serializer_class = CategorySerializer
     
-    serializer_class=CategorySerializer
-    def post(self,request):
-        categoryname=request.data.get('categoryname')
-        categoryimage=request.data.get('categoryimage')
+    def post(self, request):
+        category_name = request.data.get('categoryname')
+        category_image = request.FILES.get('categoryimage')
         
+        # Check if category image is provided
+        if not category_image:
+            return Response(
+                {'message': 'Please upload a valid image', 'Error': True},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Upload the image to Cloudinary
+        try:
+            upload_data = cloudinary.uploader.upload(category_image)
+            image_url = upload_data['url']
+            
+        except Exception as e:
+            return Response(
+                {'message': f'Failed to upload image: {str(e)}', 'success': 0},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-        serializer = self.serializer_class(
-            data={'categoryimage':categoryimage,'categoryname':categoryname,
-                    })
+        # Prepare the data for the serializer
+        serializer = self.serializer_class(data={
+            'categoryname': category_name,
+            'categoryimage': image_url  # Use the URL from Cloudinary
+        })
+        
+        # Validate and save the serializer
         if serializer.is_valid():
             serializer.save()
-            return Response({'data':serializer.data,'message':'Product Added Successfully','success':1},status=status.HTTP_200_OK)
-        return Response({'data':serializer.errors,'message':'failed','success':0},status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(
+                {'data': serializer.data, 'message': 'Category Added Successfully', 'success': 1},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {'data': serializer.errors, 'message': 'failed', 'success': 0},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 class viewCategory(GenericAPIView):
     serializer_class=CategorySerializer
 

@@ -17,7 +17,7 @@ class Registration(models.Model):
 
 class Category(models.Model):
     categoryname=models.CharField(max_length=50)
-    categoryimage=models.ImageField(upload_to='images')
+    categoryimage=models.URLField(max_length=200)
 
 class Product(models.Model):
     productname=models.CharField(max_length=50)
