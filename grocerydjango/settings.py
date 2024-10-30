@@ -77,10 +77,15 @@ WSGI_APPLICATION = 'grocerydjango.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.uaxcidrkwpiqdzlundml',
+        'PASSWORD': 'aravindsagar@2255',
+        'HOST': 'aws-0-ap-south-1.pooler.supabase.com',  # or the IP address of your PostgreSQL server
+        'PORT': '6543',       # default PostgreSQL port
     }
 }
+
 
 
 # Password validation
