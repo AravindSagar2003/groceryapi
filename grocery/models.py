@@ -39,7 +39,7 @@ class Cart(models.Model):
     cartstatus=models.CharField(max_length=50)
     price=models.CharField(max_length=50)
     productid=models.CharField(max_length=50)
-    image=models.ImageField(upload_to='images')
+    image=models.URLField(max_length=250)
 
 class Wishlist(models.Model):
     userid=models.CharField(max_length=50)
